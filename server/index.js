@@ -10,7 +10,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./controllers/auth.js";
 import userRoutes from "./routes/user.js";
+import postRoutes from "./routes/posts.js";
 import { register } from "./controllers/auth.js";
+import { createPost } from "./controllers/posts.js"
+import { verifyToken } from "./middleware/auth.js";
 
 //Configurations and middleware //
 
@@ -41,11 +44,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage});
 
 app.post("/auth/register", upload.single("picture"), register);
+app.post("/posts", verifyToken, upload.single("picture"), createPost );
 
 // Routes //
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/posts", postRoutes);
 
 // Mongoose set up//
 
